@@ -41,10 +41,12 @@ def generate_animal_info(data):
         diet = characteristics.get("diet","Unknown")
         animal_type = characteristics.get("type","Unknown")
 
-        output += f"Name: {name}\n"
-        output += f"Location: {location}\n"
-        output += f"Diet: {diet}\n"
-        output += f"animal_type: {animal_type}\n"
+        output += '<li class="cards__item">\n'
+        output += f"Name: {name}<br/>\n"
+        output += f"Location: {location}<br/>\n"
+        output += f"Diet: {diet}<br/>\n"
+        output += f"Type: {animal_type}<br/>\n"
+        output += '</li>\n\n'
 
     return output
 
