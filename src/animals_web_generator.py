@@ -26,10 +26,17 @@ def print_animal_info(animal):
 
     print()
 
+def load_template(template_path):
+    """Loads the HTML template and returns it as a string"""
+    with open(template_path, "r", encoding='utf-8') as file:
+        return file.read()
+
 def main():
     # Load list of animals from the JSON file
     animals_data = load_data("../data/animals_data.json")
+    template_content = load_template("../data/animals_template.html")
 
+    print(template_content)
 
     for animal in animals_data:
         print_animal_info(animal)
