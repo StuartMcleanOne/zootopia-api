@@ -1,36 +1,49 @@
-import json #Import the JSON module
+import json  # Import the JSON module
 import os
+
 
 def load_data(file_path):
     """loads a JSON file"""
     with open(file_path, "r", encoding="utf-8") as handle:
         return json.load(handle)
 
+
 def print_animal_info(animal):
     """Prints selected fields from the animal record, if they exist"""
 
-    if 'name' in animal:
-        print(f"Name:{animal['name']}") # Print the animal's name if available.
+    if "name" in animal:
+        print(f"Name:{animal['name']}")  # Print the animal's name if available.
 
-    if 'locations' in animal and isinstance(animal['locations'], list) and animal['locations']:
-        print(f"Location: {animal['locations'][0]}") # Prints the animal's location if available.
+    if (
+        "locations" in animal
+        and isinstance(animal["locations"], list)
+        and animal["locations"]
+    ):
+        print(
+            f"Location: {animal['locations'][0]}"
+        )  # Prints the animal's location if available.
 
+    if "characteristics" in animal:
+        characteristics = animal["characteristics"]
 
-    if 'characteristics' in animal:
-        characteristics = animal['characteristics']
+        if "diet" in characteristics:
+            print(
+                f"Diet: {characteristics['diet']}"
+            )  # Prints the animal's diet if available.
 
-        if 'diet' in characteristics:
-            print(f"Diet: {characteristics['diet']}")  # Prints the animal's diet if available.
-
-        if 'type' in characteristics:
-            print(f"Type: {characteristics['type']}") # Print the animal's type if available.
+        if "type" in characteristics:
+            print(
+                f"Type: {characteristics['type']}"
+            )  # Print the animal's type if available.
 
     print()
 
+
 def load_template(template_path):
     """Loads the HTML template and returns it as a string"""
-    with open(template_path, "r", encoding='utf-8') as file:
+    with open(template_path, "r", encoding="utf-8") as file:
         return file.read()
+
 
 def serialize_animal(animal_obj):
     """Generates the HTML string for a single animal card"""
@@ -44,15 +57,18 @@ def serialize_animal(animal_obj):
     output += '<li class="cards__item">\n'
     output += f'  <div class="card__title">{name}</div>\n'  # Wraps name in div
     output += '  <p class="card__text">\n'  # Paragraph blocks for better formatting
-    output += f'    <strong>Diet:</strong> {diet}<br/>\n'  # Bolder type face for clarity
-    output += f'    <strong>Location:</strong> {location}<br/>\n'
-    output += f'    <strong>Type:</strong> {animal_type}<br/>\n'
-    output += '  </p>\n'
-    output += '</li>\n\n'
+    output += (
+        f"    <strong>Diet:</strong> {diet}<br/>\n"  # Bolder type face for clarity
+    )
+    output += f"    <strong>Location:</strong> {location}<br/>\n"
+    output += f"    <strong>Type:</strong> {animal_type}<br/>\n"
+    output += "  </p>\n"
+    output += "</li>\n\n"
     return output
 
+
 def generate_animal_info(data):
-    return ''.join(serialize_animal(animal) for animal in data)
+    return "".join(serialize_animal(animal) for animal in data)
 
 
 def main():
@@ -62,7 +78,7 @@ def main():
     # Load the HTML template
     template_content = load_template("../data/animals_template.html")
 
-    #Generate the animal info string
+    # Generate the animal info string
     animal_info = generate_animal_info(animals_data)
 
     # Replace the placeholder template
