@@ -35,17 +35,19 @@ def load_template(template_path):
 def generate_animal_info(data):
     output = ""
     for animal in data:
-        name = animal.get("name", "Unknown") # Gets animal data, uses "unknown" as default fallback incase of missing data.
-        location = animal.get("locations", ["Unknown"])[0] # Indexes first location
-        characteristics = animal.get("characteristics", {}) # Retrieves the characteristics dictionary or empty one if non-existent
-        diet = characteristics.get("diet","Unknown")
-        animal_type = characteristics.get("type","Unknown")
+        name = animal.get("name", "Unknown")
+        location = animal.get("locations", ["Unknown"])[0]
+        characteristics = animal.get("characteristics", {})
+        diet = characteristics.get("diet", "Unknown")
+        animal_type = characteristics.get("type", "Unknown")
 
         output += '<li class="cards__item">\n'
-        output += f"Name: {name}<br/>\n"
-        output += f"Location: {location}<br/>\n"
-        output += f"Diet: {diet}<br/>\n"
-        output += f"Type: {animal_type}<br/>\n"
+        output += f'  <div class="card__title">{name}</div>\n' # Wraps name in div
+        output += '  <p class="card__text">\n' # Paragraph blocks for better formatting
+        output += f'    <strong>Diet:</strong> {diet}<br/>\n' # Bolder type face for clarity
+        output += f'    <strong>Location:</strong> {location}<br/>\n'
+        output += f'    <strong>Type:</strong> {animal_type}<br/>\n'
+        output += '  </p>\n'
         output += '</li>\n\n'
 
     return output
