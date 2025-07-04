@@ -1,4 +1,5 @@
 import json #Import the JSON module
+import os
 
 def load_data(file_path):
     """loads a JSON file"""
@@ -31,12 +32,42 @@ def load_template(template_path):
     with open(template_path, "r", encoding='utf-8') as file:
         return file.read()
 
+def generate_animal_info(data):
+    output = ""
+    for animal in data:
+        name = animal.get("name", "Unknown") # Gets animal data, uses "unknown" as default fallback incase of missing data.
+        location = animal.get("locations", ["Unknown"])[0] # Indexes first location
+        characteristics = animal.get("characteristics", {}) # Retrieves the characteristics dictionary or empty one if non-existent
+        diet = characteristics.get("diet","Unknown")
+        animal_type = characteristics.get("type","Unknown")
+
+        output += f"Name: {name}\n"
+        output += f"Location: {location}\n"
+        output += f"Diet: {diet}\n"
+        output += f"animal_type: {animal_type}\n"
+
+    return output
+
+
+
 def main():
     # Load list of animals from the JSON file
     animals_data = load_data("../data/animals_data.json")
+
+    # Load the HTML template
     template_content = load_template("../data/animals_template.html")
 
-    print(template_content)
+    #Generate the animal info string
+    animal_info = generate_animal_info(animals_data)
+
+    # Replace placeholder with generated info
+    final_html = template_content.replace("__REPLACE_ANIMALS_INFO__", animal_info)
+
+    os.makedirs("../output", exist_ok=True)
+
+    # Write final HTL to a new file
+    with open("../output/animals.html", "w", encoding="utf-8") as file:
+        file.write(final_html)
 
     for animal in animals_data:
         print_animal_info(animal)
