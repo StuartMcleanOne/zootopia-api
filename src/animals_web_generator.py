@@ -2,6 +2,10 @@ import json  # Import the JSON module
 import os
 import requests
 
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
 
 def load_data(file_path):
     """loads a JSON file"""
