@@ -1,11 +1,29 @@
 import json  # Import the JSON module
 import os
+import requests
 
 
 def load_data(file_path):
     """loads a JSON file"""
     with open(file_path, "r", encoding="utf-8") as handle:
         return json.load(handle)
+
+def fetch_animals_from_api(query,api_key):
+    """Fetch animal data from API Ninjas"""
+    url = f"https://api.api-ninjas.com/v1/animals?name={query}"
+    headers = {"X-Api-Key": api_key}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json()
+        if data:
+            return data
+        else:
+            print(" No animals found for that query.")
+            return []
+    else:
+        print(f" API error {response.status_code}: {response.text}")
+        return []
 
 
 def print_animal_info(animal):
@@ -73,14 +91,17 @@ def generate_animal_info(data):
 
 def main():
     # Load list of animals from the JSON file
-    animals_data = load_data("../data/animals_data.json")
+    api_key = "lCc4G9mP+5nOqtsX5Jaw6Q==u65jxP1s5yJ0fgFG "
+    query = input("Enter a name of an animal: ").strip()
+    animals_data = fetch_animals_from_api(query, api_key)
+
+    if not animals_data:
+        animal_info =f'<h2> The animal "{query}" doesn\'t exist. </h2>'
+    else:
+        animal_info = generate_animal_info(animals_data)
 
     # Load the HTML template
     template_content = load_template("../data/animals_template.html")
-
-    # Generate the animal info string
-    animal_info = generate_animal_info(animals_data)
-
     # Replace the placeholder template
     final_html = template_content.replace("__REPLACE_ANIMALS_INFO__", animal_info)
 
@@ -91,6 +112,7 @@ def main():
     with open("../output/animals.html", "w", encoding="utf-8") as file:
         file.write(final_html)
 
+    print("\n✅ Website was successfully generated to the file animals.html.\n")
     for animal in animals_data:
         print_animal_info(animal)
 
