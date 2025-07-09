@@ -1,11 +1,11 @@
 import json
 import os
 from dotenv import load_dotenv
-import data_fetcher  # Modularized fetcher script
+import data_fetcher  # Modular API call logic
 
 # Load environment variables
 load_dotenv()
-API_KEY = os.getenv("API_KEY")  # Access for legacy compatibility
+API_KEY = os.getenv("API_KEY")
 
 def load_data(file_path):
     """Loads animal data from a static JSON file."""
@@ -35,10 +35,14 @@ def print_animal_info(animal):
 
     print()
 
-def load_template(template_path):
-    """Loads the HTML template and returns it as a string."""
-    with open(template_path, "r", encoding="utf-8") as file:
+def load_template():
+    """Safely load the animals_template.html using an absolute path."""
+    import os
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, "..", "data", "animals_template.html")
+    with open(full_path, "r", encoding="utf-8") as file:
         return file.read()
+
 
 def serialize_animal(animal_obj):
     """Generates the HTML string for a single animal card."""
@@ -64,10 +68,9 @@ def generate_animal_info(data):
     return "".join(serialize_animal(animal) for animal in data)
 
 def main():
-    # Request animal name from user
+    # Entry point for the project
     query = input("Enter a name of an animal: ").strip()
 
-    # Fetch data using the modular fetcher
     animals_data = data_fetcher.fetch_data(query)
 
     if not animals_data:
@@ -75,16 +78,11 @@ def main():
     else:
         animal_info = generate_animal_info(animals_data)
 
-    # Load HTML template
-    template_content = load_template("../data/animals_template.html")
-
-    # Replace placeholder with generated HTML
+    template_content = load_template()
     final_html = template_content.replace("__REPLACE_ANIMALS_INFO__", animal_info)
 
-    # Ensure output folder exists
     os.makedirs("../output", exist_ok=True)
 
-    # Write the final HTML to a new file
     with open("../output/animals.html", "w", encoding="utf-8") as file:
         file.write(final_html)
 

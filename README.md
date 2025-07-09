@@ -33,7 +33,7 @@ Built as part of Masterschool’s frontend exercises, the code showcases modular
 To generate animal data into an HTML file:
 
    ```bash
-python src/animals_web_generator.py
+python src/main.py
    ```
 You will be prompted to enter an animal name (e.g., Lion). The result will be written to output/animals.html
 
